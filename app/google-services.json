@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "443818833142",
+    "project_id": "flexi-c11c7",
+    "storage_bucket": "flexi-c11c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:443818833142:android:9d23ebb3e82c4b0944a8d7",
+        "android_client_info": {
+          "package_name": "com.example.flexie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLeNAqoIG_2_3PEdDyQ55ki3xs0eIQokg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
