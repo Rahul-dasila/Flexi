@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("com.google.firebase:firebase-auth:23.0.0")
     implementation("com.google.firebase:firebase-firestore:25.0.0")
+    implementation("com.google.firebase:firebase-database-ktx:21.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -105,6 +106,12 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
     implementation ("androidx.compose.material:material-icons-extended:1.6.8")
 
+    //View pager library
     implementation ("com.google.accompanist:accompanist-pager:0.28.0")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
+
+    //Coil library
+    implementation ("io.coil-kt:coil-compose:2.2.2")
+
+    implementation ("com.google.firebase:firebase-storage:21.0.0")
 }

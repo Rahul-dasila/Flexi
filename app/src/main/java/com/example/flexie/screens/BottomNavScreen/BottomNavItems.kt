@@ -7,10 +7,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.flexie.R
 import com.example.flexie.navgraphs.screen
 import com.example.flexie.ui.theme.bottomNavColor
 
@@ -46,7 +48,7 @@ fun BottomNavItems(navController: NavHostController, items: List<screen>) {
                     Text(
                         text = screen.name,
                         fontSize = 8.sp,
-                        fontFamily = FontFamily.SansSerif
+                        fontFamily = FontFamily(Font(R.font.helvetica_neue))
                         ,
                         color = if (select) Color.White else Color.Gray
                     )

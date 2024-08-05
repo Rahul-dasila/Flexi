@@ -9,9 +9,11 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.flexie.ViewModels.d_homeScreen_ViewModel
 import com.example.flexie.screens.BottomNavScreen.Search_screen
 import com.example.flexie.screens.BottomNavScreen.chat_screen
 import com.example.flexie.screens.BottomNavScreen.d_home_Screen
@@ -20,9 +22,10 @@ import com.example.flexie.screens.BottomNavScreen.profile_screen
 
 @Composable
 fun BottomNav_navgraph(navController :NavHostController , modifier: Modifier) {
+    val d_homeViewModel : d_homeScreen_ViewModel = hiltViewModel()
    NavHost(navController = navController, startDestination = screen.Home.route ){
        composable(screen.Home.route){
-         d_home_Screen()
+         d_home_Screen(d_homeViewModel)
        }
        composable(screen.Search.route){
            Search_screen()
