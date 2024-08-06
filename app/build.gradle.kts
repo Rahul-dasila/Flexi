@@ -114,4 +114,5 @@ dependencies {
     implementation ("io.coil-kt:coil-compose:2.2.2")
 
     implementation ("com.google.firebase:firebase-storage:21.0.0")
+
 }

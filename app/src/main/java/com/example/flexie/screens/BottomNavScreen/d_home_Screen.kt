@@ -1,6 +1,5 @@
 package com.example.flexie.screens.BottomNavScreen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -46,6 +47,7 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.flexie.R
 import com.example.flexie.ViewModels.d_homeScreen_ViewModel
+import com.example.flexie.models.movie_home_row
 import com.example.flexie.models.movie_view_pager
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.utils.px
@@ -59,12 +61,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
     val movieViewPager = d_homeViewModel.movieViewPager.collectAsState().value
+    val movieCategories = d_homeViewModel.movieCategories.collectAsState().value
+    val movieRowData = d_homeViewModel.movieRow.collectAsState().value
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     var _key = remember { mutableStateOf(false) }
     val key = _key.value
     var _movieItem = remember { mutableStateOf(-1) }
     val movieItem = _movieItem.value
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -80,6 +86,7 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
                         modifier = Modifier
                             .wrapContentHeight()
                             .fillMaxWidth()
+                            .padding(bottom = 15.dp)
 
                     ) {
                         movieViewPagerItem(movie = movieViewPager[it])
@@ -91,6 +98,55 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
                     }
                 }
             }
+            item{
+                Column (modifier = Modifier.padding(top = 19.dp, bottom = 8.dp)){
+                    Text(
+                        text = "Continue watching for you",
+                        color = Color.LightGray,
+                        letterSpacing = 0.7.sp,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily(Font(R.font.helvetica_neue)),
+                        modifier = Modifier.padding(start = 8.6.dp, bottom = 7.dp)
+                    )
+                    ContinueWatchingItem()
+                }
+            }
+
+            if(movieCategories.isNotEmpty()){
+                movieCategories.forEach {
+                    item {
+                        LaunchedEffect(key1 = it.category){
+                            d_homeViewModel.loadMovies(it.category)
+                        }
+                        if(!movieRowData[it.category].isNullOrEmpty()) {
+                            Column(modifier = Modifier.padding(top = 20.dp, bottom = 5.dp)) {
+                                Text(
+                                    text = it.category,
+                                    color = Color.LightGray,
+                                    fontSize = 18.sp,
+                                    letterSpacing = 0.7.sp,
+                                    fontFamily = FontFamily(Font(R.font.helvetica_neue)),
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(start = 8.6.dp, bottom = 7.dp)
+                                )
+                                movieRowData[it.category]?.let {
+                                    MovieRowItem(list = it)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            item { 
+                Spacer(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(130.dp))
+            }
+
+
+
         }
         CustomFloatingActionButton()
     }
@@ -103,7 +159,39 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
         }
     }
 }
+@Composable
+fun ContinueWatchingItem(){
+    val list = listOf<Int>(1,2,3)
+    LazyRow(modifier = Modifier
+        .wrapContentWidth()
+        .wrapContentHeight()){
+        items(list){
+            Image(painter = painterResource(id = R.drawable.inter), contentDescription ="", modifier = Modifier
+                .width(240.dp)
+                .height(150.dp)
+                .padding(start = 10.dp, bottom = 5.dp)
+                .clip(RoundedCornerShape(9.dp)),contentScale = ContentScale.Crop )
+        }
+    }
+}
 
+@Composable
+fun MovieRowItem(list : List<movie_home_row>){
+    LazyRow(modifier = Modifier
+        .wrapContentWidth()
+        .wrapContentWidth()){
+     items(list){
+         val painter = rememberImagePainter(request = ImageRequest.Builder(LocalContext.current).data(it.imageUrI).crossfade(true).build())
+         Image(painter = painter, contentDescription =" ", modifier = Modifier
+             .width(145.dp)
+             .height(185.dp)
+             .padding(start = 10.dp)
+             .clip(RoundedCornerShape(4.dp))
+             .clickable {  }
+             ,contentScale = ContentScale.Crop)
+     }
+    }
+}
 
 @Composable
 fun movieViewPagerItem(movie: movie_view_pager) {
@@ -165,7 +253,7 @@ fun movieViewPagerItem(movie: movie_view_pager) {
         }
         Row(modifier = Modifier
             .wrapContentWidth()
-            .padding(bottom = 20.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.SpaceAround) {
+            .padding(bottom = 10.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.SpaceAround) {
             Text(text = movie.language, color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) )
             Spacer(modifier = Modifier.width(15.dp))
             Text(text = movie.type, color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) )
@@ -178,14 +266,15 @@ fun movieViewPagerItem(movie: movie_view_pager) {
 @Composable
 fun watchButton(movieItem: Int) {
     Box(modifier = Modifier
+        .padding(bottom = 30.dp)
         .wrapContentHeight()
         .clip(RoundedCornerShape(8.dp))
         .background(Color.DarkGray)
         .clickable {
-            Log.d("rahul", movieItem.toString())
+
         }
         ) {
-        Row (modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 40.dp, end = 40.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Center){
+        Row (modifier = Modifier.padding(top = 5.dp, bottom = 8.dp, start = 40.dp, end = 40.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Center){
             Image(painter = painterResource(id = R.drawable.baseline_play_arrow_24), contentDescription = "play" , modifier = Modifier.padding(end = 3.dp))
             Text(text = "Watch Now", color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)))
         }
