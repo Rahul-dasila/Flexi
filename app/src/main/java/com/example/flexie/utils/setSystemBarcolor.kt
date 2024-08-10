@@ -26,6 +26,8 @@ fun setSystemBarColor(statusBarColor: Color, navigationBarColor: Color = statusB
 }
 val Int.px: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
+
+
 fun Activity.setOrientationLandscape(){
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 }

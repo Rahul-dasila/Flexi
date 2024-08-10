@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -50,6 +51,7 @@ import com.example.flexie.ViewModels.d_homeScreen_ViewModel
 import com.example.flexie.models.movie_home_row
 import com.example.flexie.models.movie_view_pager
 import com.example.flexie.ui.theme.darkBlue
+import com.example.flexie.utils.Dimen
 import com.example.flexie.utils.px
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -104,7 +106,7 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
                         text = "Continue watching for you",
                         color = Color.LightGray,
                         letterSpacing = 0.7.sp,
-                        fontSize = 18.sp,
+                        fontSize = (Dimen.dimen.fontSizeHeadLine-4).sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily(Font(R.font.helvetica_neue)),
                         modifier = Modifier.padding(start = 8.6.dp, bottom = 7.dp)
@@ -120,11 +122,11 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
                             d_homeViewModel.loadMovies(it.category)
                         }
                         if(!movieRowData[it.category].isNullOrEmpty()) {
-                            Column(modifier = Modifier.padding(top = 20.dp, bottom = 5.dp)) {
+                            Column(modifier = Modifier.padding(top = Dimen.dimen.paddingLarge, bottom = Dimen.dimen.padding3)) {
                                 Text(
                                     text = it.category,
                                     color = Color.LightGray,
-                                    fontSize = 18.sp,
+                                    fontSize = (Dimen.dimen.fontSizeHeadLine-4).sp,
                                     letterSpacing = 0.7.sp,
                                     fontFamily = FontFamily(Font(R.font.helvetica_neue)),
                                     fontWeight = FontWeight.Bold,
@@ -167,8 +169,8 @@ fun ContinueWatchingItem(){
         .wrapContentHeight()){
         items(list){
             Image(painter = painterResource(id = R.drawable.inter), contentDescription ="", modifier = Modifier
-                .width(240.dp)
-                .height(150.dp)
+                .width(Dimen.dimen.width2)
+                .height(Dimen.dimen.height2)
                 .padding(start = 10.dp, bottom = 5.dp)
                 .clip(RoundedCornerShape(9.dp)),contentScale = ContentScale.Crop )
         }
@@ -183,11 +185,11 @@ fun MovieRowItem(list : List<movie_home_row>){
      items(list){
          val painter = rememberImagePainter(request = ImageRequest.Builder(LocalContext.current).data(it.imageUrI).crossfade(true).build())
          Image(painter = painter, contentDescription =" ", modifier = Modifier
-             .width(145.dp)
-             .height(185.dp)
+             .width(Dimen.dimen.width1)
+             .height(Dimen.dimen.height1)
              .padding(start = 10.dp)
              .clip(RoundedCornerShape(4.dp))
-             .clickable {  }
+             .clickable { }
              ,contentScale = ContentScale.Crop)
      }
     }
@@ -207,8 +209,8 @@ fun movieViewPagerItem(movie: movie_view_pager) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(370.dp)
-                .padding(top = 20.dp)
+                .height(Dimen.dimen.viewPager)
+                .padding(top = Dimen.dimen.padding1)
         ) {
             val screenHeight = LocalConfiguration.current.screenHeightDp.px
             val screenWidth = LocalConfiguration.current.screenWidthDp.px
@@ -226,39 +228,19 @@ fun movieViewPagerItem(movie: movie_view_pager) {
                 modifier = Modifier
                     .matchParentSize()
                     .background(
-                        Brush.verticalGradient(colors, startY = 400f, endY = 800f)
+                        Brush.verticalGradient(colors, startY = 300f, endY = 0f)
                     )
             )
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        Brush.verticalGradient(colors, startY = 600f, endY = 0f)
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        Brush.horizontalGradient(colors, startX = 600f, endX = screenWidth / 1f)
-                    )
-            )
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        Brush.horizontalGradient(colors, startX = 400f, endX = 0f)
-                    )
-            )
+
         }
         Row(modifier = Modifier
             .wrapContentWidth()
             .padding(bottom = 10.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.SpaceAround) {
-            Text(text = movie.language, color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) )
-            Spacer(modifier = Modifier.width(15.dp))
-            Text(text = movie.type, color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) )
-            Spacer(modifier = Modifier.width(13.dp))
-            Text(text = movie.rating.toString()+" 🔥", color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) )
+            Text(text = movie.language, color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) , fontSize = Dimen.dimen.fontSizeSmall2.sp )
+            Spacer(modifier = Modifier.width(Dimen.dimen.small1+1.5.dp))
+            Text(text = movie.type, color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) , fontSize = Dimen.dimen.fontSizeSmall2.sp )
+            Spacer(modifier = Modifier.width(Dimen.dimen.small1+1.5.dp))
+            Text(text = movie.rating.toString()+" 🔥", color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) , fontSize = Dimen.dimen.fontSizeSmall2.sp )
         }
     }
 }
@@ -272,11 +254,16 @@ fun watchButton(movieItem: Int) {
         .background(Color.DarkGray)
         .clickable {
 
-        }
+        }, contentAlignment = Alignment.Center
         ) {
-        Row (modifier = Modifier.padding(top = 5.dp, bottom = 8.dp, start = 40.dp, end = 40.dp), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Center){
-            Image(painter = painterResource(id = R.drawable.baseline_play_arrow_24), contentDescription = "play" , modifier = Modifier.padding(end = 3.dp))
-            Text(text = "Watch Now", color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)))
+        Row (modifier = Modifier
+            .padding(top = Dimen.dimen.padding2, bottom = Dimen.dimen.padding2 , start = 40.dp, end = 40.dp)
+            .wrapContentHeight()
+            .wrapContentWidth(), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Center){
+            Image(painter = painterResource(id = R.drawable.baseline_play_arrow_24), contentDescription = "play" , modifier = Modifier.size(Dimen.dimen.button))
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = "Watch Now", color = Color.LightGray, fontFamily = FontFamily(Font(R.font.helvetica_neue)) , fontSize = Dimen.dimen.fontSizeSmall2.sp)
+            Spacer(modifier = Modifier.width(11.5.dp))
         }
         }
 }
@@ -319,7 +306,7 @@ fun homeFloatingActionButton() {
                         .padding(start = 6.5.dp, end = 6.5.dp),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
+                    fontSize = Dimen.dimen.fontSizeSmall3.sp,
                     fontFamily = FontFamily(Font(R.font.helvetica_neue))
                 )
                 if (it != "Shows") {

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,6 +37,7 @@ import com.example.flexie.ViewModels.AuthViewmodel
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.ui.theme.lightGray
 import com.example.flexie.ui.theme.lightGray2
+import com.example.flexie.utils.Dimen
 import com.example.flexie.utils.px
 import com.example.flexie.utils.setSystemBarColor
 
@@ -67,12 +69,12 @@ fun EnterNameScreen(navController: NavController, authViewmodel: AuthViewmodel) 
                     .padding(start = 18.dp, bottom = 18.dp, top = 7.dp)
                     .clickable {
                         navController.popBackStack()
-                    }
+                    }.size(Dimen.dimen.medium1)
             )
             Text(
                 text = "It seems like you are new here,", color = Color.White,
                 fontFamily = FontFamily(Font(R.font.satoshi)),
-                fontSize = 15.sp,
+                fontSize = (Dimen.dimen.fontSizeMedium-3).sp,
                 modifier = Modifier.padding(18.dp, top = 23.dp)
             )
             Text(
@@ -81,7 +83,7 @@ fun EnterNameScreen(navController: NavController, authViewmodel: AuthViewmodel) 
                 color = Color.White,
                 fontFamily = FontFamily(
                     Font(R.font.satoshi)
-                ), fontSize = 20.sp
+                ), fontSize = Dimen.dimen.fontSizeHeadLine.sp
             )
 
             OutlinedTextField(
@@ -113,7 +115,7 @@ fun EnterNameScreen(navController: NavController, authViewmodel: AuthViewmodel) 
                 text = "Don't worry you can also change your name later.",
                 modifier = Modifier.padding(start = 19.dp),
                 color = lightGray2,
-                fontSize = 10.sp,
+                fontSize = Dimen.dimen.fontSizeSmall.sp,
             )
 
             Row(

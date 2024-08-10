@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -49,6 +50,7 @@ import com.example.flexie.ViewModels.AuthViewmodel
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.ui.theme.lightGray
 import com.example.flexie.ui.theme.lightGray2
+import com.example.flexie.utils.Dimen
 import com.example.flexie.utils.px
 import com.example.flexie.utils.setSystemBarColor
 
@@ -77,13 +79,13 @@ fun sign_in_screen(navController: NavController,authViewmodel: AuthViewmodel) {
                 contentDescription = "backBtn",
                 modifier = Modifier.padding(start = 18.dp, bottom = 18.dp, top = 7.dp).clickable {
                     navController.popBackStack()
-                }
+                }.size(Dimen.dimen.medium1)
             )
             Text(
                 text = authViewmodel.text1,
                 fontFamily = FontFamily(Font(R.font.satoshi)),
                 color = Color.White,
-                fontSize = 20.sp,
+                fontSize = Dimen.dimen.fontSizeHeadLine.sp,
                 modifier = Modifier.padding(18.dp, top = 21.dp)
             )
             Row(
@@ -132,7 +134,7 @@ fun sign_in_screen(navController: NavController,authViewmodel: AuthViewmodel) {
                 text = "We'll send you an OTP by SMS to confirm your mobile number.",
                 modifier = Modifier.padding(start = 19.dp),
                 color = lightGray2,
-                fontSize = 10.sp,
+                fontSize = Dimen.dimen.fontSizeSmall.sp,
             )
             Row(
                 modifier = Modifier
@@ -143,11 +145,11 @@ fun sign_in_screen(navController: NavController,authViewmodel: AuthViewmodel) {
             )
             {
                 Row {
-                    Text(text = authViewmodel.text2, color = lightGray2, fontSize = 12.sp)
+                    Text(text = authViewmodel.text2, color = lightGray2, fontSize = Dimen.dimen.fontSizeSmall.sp)
                     Text(
                         text = authViewmodel.text3,
                         color = Color.Red,
-                        fontSize = 12.sp,
+                        fontSize = Dimen.dimen.fontSizeSmall.sp,
                         modifier = Modifier.clickable {
                             authViewmodel.signinOrsignup(!authViewmodel.check)
                         })

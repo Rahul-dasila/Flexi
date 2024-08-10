@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -52,6 +52,7 @@ import com.example.flexie.ViewModels.AuthViewmodel
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.ui.theme.lightGray
 import com.example.flexie.ui.theme.lightGray2
+import com.example.flexie.utils.Dimen
 import com.example.flexie.utils.px
 import com.example.flexie.utils.setSystemBarColor
 import com.google.firebase.auth.PhoneAuthProvider
@@ -82,14 +83,14 @@ fun Sign_In_otp_screen(navController: NavController, authViewmodel: AuthViewmode
                     .padding(start = 18.dp, bottom = 18.dp, top = 7.dp)
                     .clickable {
                         navController.popBackStack()
-                    }
+                    }.size(Dimen.dimen.medium1)
             )
             Column {
                 Text(
                     text = "Enter the 6 digit code sent to",
                     color = Color.White,
                     fontFamily = FontFamily(Font(R.font.satoshi)),
-                    fontSize = 15.sp,
+                    fontSize = (Dimen.dimen.fontSizeMedium-3).sp,
                     modifier = Modifier.padding(18.dp, top = 23.dp)
                 )
 
@@ -97,7 +98,7 @@ fun Sign_In_otp_screen(navController: NavController, authViewmodel: AuthViewmode
                     text = "+91 ${authViewmodel.mobileNumber}",
                     color = Color.White,
                     fontFamily = FontFamily(Font(R.font.satoshi)),
-                    fontSize = 18.sp,
+                    fontSize = Dimen.dimen.fontSizeHeadLine.sp,
                     modifier = Modifier.padding(18.dp, top = 8.dp)
                 )
             }
@@ -125,7 +126,7 @@ fun Sign_In_otp_screen(navController: NavController, authViewmodel: AuthViewmode
                             }
                         },
                         modifier = Modifier
-                            .width(47.dp)
+                            .size(width = Dimen.dimen.medium4 , height = Dimen.dimen.medium4)
                             .focusRequester(focusRequester = focusRequesters[index])
                             .onKeyEvent { event ->
                                 if (event.key == Key.Backspace) {
@@ -139,7 +140,7 @@ fun Sign_In_otp_screen(navController: NavController, authViewmodel: AuthViewmode
                             },// Evenly distribute space
                         shape = RoundedCornerShape(8.dp),
                         singleLine = true,
-                        textStyle = TextStyle(textAlign = TextAlign.Center),
+                        textStyle = TextStyle(textAlign = TextAlign.Center, fontSize = Dimen.dimen.fontSizeExtraSmall.sp),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = Color.Gray,
                             focusedLabelColor = Color.Gray,
@@ -162,7 +163,7 @@ fun Sign_In_otp_screen(navController: NavController, authViewmodel: AuthViewmode
                 text = "An OTP is sent to the number to confirm your mobile number.",
                 modifier = Modifier.padding(start = 19.dp),
                 color = lightGray2,
-                fontSize = 10.sp,
+                fontSize = Dimen.dimen.fontSizeSmall.sp,
             )
             Row(
                 modifier = Modifier
@@ -173,12 +174,12 @@ fun Sign_In_otp_screen(navController: NavController, authViewmodel: AuthViewmode
             )
             {
                 Row {
-                    Text(text = "Didn't receive OTP?  ", color = lightGray2, fontSize = 12.sp)
+                    Text(text = "Didn't receive OTP?  ", color = lightGray2, fontSize = (Dimen.dimen.fontSizeSmall+1).sp)
                     if (authViewmodel.visibilityAndenabled) {
                         Text(
                             text = "Resend OTP",
                             color = Color.Red,
-                            fontSize = 12.sp,
+                            fontSize =(Dimen.dimen.fontSizeSmall+1).sp,
                             modifier = Modifier.clickable {
                                 authViewmodel.signInWithPhoneNumber(
                                     "+91${authViewmodel.mobileNumber}",

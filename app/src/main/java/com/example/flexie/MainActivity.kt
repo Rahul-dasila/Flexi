@@ -11,11 +11,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.flexie.ViewModels.AuthViewmodel
 import com.example.flexie.screens.AuthScreen.EnterNameScreen
 import com.example.flexie.screens.AuthScreen.Sign_In_otp_screen
-import com.example.flexie.screens.homeScreen
 import com.example.flexie.screens.AuthScreen.signUpOrLoginScreen
 import com.example.flexie.screens.AuthScreen.sign_in_screen
+import com.example.flexie.screens.homeScreen
 import com.example.flexie.screens.splashScreen
 import com.example.flexie.ui.theme.FlexieTheme
+import com.example.flexie.utils.dimensAndTypo
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FlexieTheme {
+                dimensAndTypo()
                 App(firebaseAuth)
             }
         }
