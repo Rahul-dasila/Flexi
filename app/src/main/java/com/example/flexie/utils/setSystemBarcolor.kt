@@ -28,6 +28,6 @@ val Int.px: Int get() = (this * Resources.getSystem().displayMetrics.density).to
 
 
 
-fun Activity.setOrientationLandscape(){
-    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+fun Activity.setOrientation(){
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 }

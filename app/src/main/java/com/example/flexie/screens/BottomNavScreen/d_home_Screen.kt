@@ -1,5 +1,6 @@
 package com.example.flexie.screens.BottomNavScreen
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,8 +43,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.flexie.R
@@ -53,6 +56,7 @@ import com.example.flexie.models.movie_view_pager
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.utils.Dimen
 import com.example.flexie.utils.px
+import com.example.flexie.utils.setOrientation
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -61,7 +65,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
+fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel  , navHostController: NavHostController) {
     val movieViewPager = d_homeViewModel.movieViewPager.collectAsState().value
     val movieCategories = d_homeViewModel.movieCategories.collectAsState().value
     val movieRowData = d_homeViewModel.movieRow.collectAsState().value
@@ -71,6 +75,8 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
     val key = _key.value
     var _movieItem = remember { mutableStateOf(-1) }
     val movieItem = _movieItem.value
+    val activity = LocalContext.current as Activity
+    activity.setOrientation()
 
 
     Box(
@@ -78,6 +84,7 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
             .fillMaxSize()
             .background(darkBlue)
     ) {
+
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             if (movieViewPager.isNotEmpty()) {
                 _key.value = true
@@ -115,33 +122,48 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel) {
                 }
             }
 
-            if(movieCategories.isNotEmpty()){
-                movieCategories.forEach {
+            if (movieCategories.isNotEmpty()) {
+                movieCategories.forEachIndexed { index, category ->
                     item {
-                        LaunchedEffect(key1 = it.category){
-                            d_homeViewModel.loadMovies(it.category)
+                        LaunchedEffect(key1 = Unit) {
+                            d_homeViewModel.loadMovies(category.category)
                         }
-                        if(!movieRowData[it.category].isNullOrEmpty()) {
-                            Column(modifier = Modifier.padding(top = Dimen.dimen.paddingLarge, bottom = Dimen.dimen.padding3)) {
+                        if (!movieRowData[category.category].isNullOrEmpty()) {
+                            Column(
+                                modifier = Modifier.padding(
+                                    top = Dimen.dimen.paddingLarge,
+                                    bottom = Dimen.dimen.padding3
+                                )
+                            ) {
                                 Text(
-                                    text = it.category,
+                                    text = category.category,
                                     color = Color.LightGray,
-                                    fontSize = (Dimen.dimen.fontSizeHeadLine-4).sp,
+                                    fontSize = (Dimen.dimen.fontSizeHeadLine - 4).sp,
                                     letterSpacing = 0.7.sp,
                                     fontFamily = FontFamily(Font(R.font.helvetica_neue)),
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(start = 8.6.dp, bottom = 7.dp)
                                 )
-                                movieRowData[it.category]?.let {
-                                    MovieRowItem(list = it)
+                                movieRowData[category.category]?.let { movies ->
+                                    // Use the index to determine when to change the size
+                                    if ((index + 1) % 4 == 0) {
+                                        MovieRowItem(
+                                            list = movies,
+                                            height = Dimen.dimen.height3,
+                                            width = Dimen.dimen.width3 , navHostController
+                                        )
+                                    } else {
+                                        MovieRowItem(list = movies ,navHostController = navHostController)
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            
-            item { 
+
+
+            item {
                 Spacer(modifier = Modifier
                     .fillMaxWidth()
                     .height(130.dp))
@@ -178,22 +200,25 @@ fun ContinueWatchingItem(){
 }
 
 @Composable
-fun MovieRowItem(list : List<movie_home_row>){
+fun MovieRowItem(list : List<movie_home_row>, height : Dp = Dimen.dimen.height1, width : Dp = Dimen.dimen.width1 , navHostController: NavHostController){
     LazyRow(modifier = Modifier
         .wrapContentWidth()
         .wrapContentWidth()){
      items(list){
          val painter = rememberImagePainter(request = ImageRequest.Builder(LocalContext.current).data(it.imageUrI).crossfade(true).build())
          Image(painter = painter, contentDescription =" ", modifier = Modifier
-             .width(Dimen.dimen.width1)
-             .height(Dimen.dimen.height1)
+             .width(width)
+             .height(height)
              .padding(start = 10.dp)
              .clip(RoundedCornerShape(4.dp))
-             .clickable { }
+             .clickable {
+             navHostController.navigate("movieDetail")
+             }
              ,contentScale = ContentScale.Crop)
      }
     }
 }
+
 
 @Composable
 fun movieViewPagerItem(movie: movie_view_pager) {
@@ -228,7 +253,14 @@ fun movieViewPagerItem(movie: movie_view_pager) {
                 modifier = Modifier
                     .matchParentSize()
                     .background(
-                        Brush.verticalGradient(colors, startY = 300f, endY = 0f)
+                        Brush.verticalGradient(colors)
+                    )
+            )
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(
+                        Brush.verticalGradient(colors, startY = 250f, endY = 0f)
                     )
             )
 
@@ -257,7 +289,12 @@ fun watchButton(movieItem: Int) {
         }, contentAlignment = Alignment.Center
         ) {
         Row (modifier = Modifier
-            .padding(top = Dimen.dimen.padding2, bottom = Dimen.dimen.padding2 , start = 40.dp, end = 40.dp)
+            .padding(
+                top = Dimen.dimen.padding2,
+                bottom = Dimen.dimen.padding2,
+                start = 40.dp,
+                end = 40.dp
+            )
             .wrapContentHeight()
             .wrapContentWidth(), verticalAlignment = Alignment.CenterVertically , horizontalArrangement = Arrangement.Center){
             Image(painter = painterResource(id = R.drawable.baseline_play_arrow_24), contentDescription = "play" , modifier = Modifier.size(Dimen.dimen.button))
@@ -320,4 +357,5 @@ fun homeFloatingActionButton() {
             }
         }
     }
+
 }

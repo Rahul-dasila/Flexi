@@ -37,7 +37,15 @@ data class Dimens(
     val height1: Dp = 0.dp,
     val width2 : Dp = 0.dp,
     val height2 : Dp = 0.dp,
-    val fontSizeSmall3: Int = fontSizeSmall
+    val fontSizeSmall3: Int = fontSizeSmall ,
+    val width3 : Dp = 0.dp,
+    val height3 : Dp = 0.dp,
+    val moviePostor : Dp = 0.dp,
+    val fontSizeSmall4 : Int  = 0,
+    val button2 : Dp = 0.dp,
+    val height4 : Dp = 0.dp,
+    val boxHeight : Dp = 0.dp,
+    val padding4 : Dp = padding3
 )
 
 val compactSmall = Dimens(
@@ -54,7 +62,7 @@ val compactSmall = Dimens(
     16,
     25,
     7.dp,
-    15.dp,
+    12.5.dp,
     20.dp,
     fontSizeHeadLine = 18,
     fontSizeExtraSmall = 8.5f,
@@ -67,7 +75,14 @@ val compactSmall = Dimens(
     padding2 = 4.dp,
     padding3 = 3.5.dp,
     width1 = 105.dp,
-    height1 = 135.dp , width2 = 200.dp  , height2 = 125.dp
+    height1 = 135.dp , width2 = 200.dp  , height2 = 125.dp ,
+    height3 = 220.dp , width3 = 190.dp , moviePostor = 275.dp,
+    fontSizeSmall4 = 11 ,
+    button2 = 24.dp ,
+    height4 = 150.dp,
+    boxHeight = 480.dp,
+    padding4 = 4.5.dp
+
 )
 
 val compactMedium = Dimens(
@@ -98,7 +113,13 @@ val compactMedium = Dimens(
     width1 = 135.dp,
     height1 = 175.dp,
     width2 = 240.dp  , height2 = 150.dp,
-    fontSizeSmall3 = 12
+    fontSizeSmall3 = 12 ,
+    height3 = 270.dp , width3 = 230.dp , moviePostor = 350.dp,
+    fontSizeSmall4 = 13 ,
+    button2 = 30.dp,
+    height4 = 200.dp,
+    boxHeight = 650.dp,
+    padding4 = 7.dp
 )
 
 
@@ -129,12 +150,18 @@ val Compact = Dimens(
     padding3 = 10.dp,
     width1 = 165.dp,
     height1 = 210.dp,
-    width2 = 280.dp  , height2 = 175.dp
+    width2 = 280.dp  , height2 = 175.dp,
+    height3 = 320.dp , width3 = 270.dp , moviePostor = 395.dp,
+    fontSizeSmall4 = 16,
+    button2 = 34.dp ,
+    height4 = 250.dp ,
+    boxHeight = 800.dp,
+    padding4 = 8.dp
 )
 
 val Medium = Dimens(
     7.dp,
-    small1 = 10.dp,
+    small1 = 12.5.dp,
     15.dp,
     20.dp,
     medium1 = 30.dp,
@@ -160,6 +187,12 @@ val Medium = Dimens(
     width1 = 195.dp,
     height1 = 250.dp,
     width2 = 320.dp  , height2 = 200.dp
+    , height3 = 370.dp , width3 = 310.dp , moviePostor = 465.dp,
+    fontSizeSmall4 = 19,
+    button2 = 43.dp ,
+    height4 = 300.dp ,
+    boxHeight = 900.dp,
+    padding4 = 12.dp
 )
 
 val ExpandedDimens = Dimens(
@@ -191,5 +224,11 @@ val ExpandedDimens = Dimens(
     width1 = 245.dp,
     height1 = 310.dp,
     width2 = 360.dp  , height2 = 225.dp
+    , height3 = 435.dp , width3 = 365.dp , moviePostor = 650.dp,
+    fontSizeSmall4 = 24,
+    button2 = 50.dp,
+    height4 = 375.dp,
+    boxHeight = 1250.dp,
+    padding4 = 12.dp
 
 )

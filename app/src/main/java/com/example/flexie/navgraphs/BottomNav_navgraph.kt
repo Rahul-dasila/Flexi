@@ -19,13 +19,14 @@ import com.example.flexie.screens.BottomNavScreen.chat_screen
 import com.example.flexie.screens.BottomNavScreen.d_home_Screen
 import com.example.flexie.screens.BottomNavScreen.friends_screen
 import com.example.flexie.screens.BottomNavScreen.profile_screen
+import com.example.flexie.screens.movieScreens.movieDetailScreen
 
 @Composable
-fun BottomNav_navgraph(navController :NavHostController , modifier: Modifier) {
+fun BottomNav_navgraph(navController :NavHostController , modifier: Modifier ) {
     val d_homeViewModel : d_homeScreen_ViewModel = hiltViewModel()
    NavHost(navController = navController, startDestination = screen.Home.route ){
        composable(screen.Home.route){
-         d_home_Screen(d_homeViewModel)
+         d_home_Screen(d_homeViewModel , navController)
        }
        composable(screen.Search.route){
            Search_screen()
@@ -38,6 +39,9 @@ fun BottomNav_navgraph(navController :NavHostController , modifier: Modifier) {
        }
        composable(screen.Profile.route){
            profile_screen()
+       }
+       composable("movieDetail"){
+           movieDetailScreen(navController)
        }
    }
 

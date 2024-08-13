@@ -3,9 +3,13 @@ package com.example.flexie.screens
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.flexie.ViewModels.AuthViewmodel
 import com.example.flexie.navgraphs.BottomNav_navgraph
@@ -17,6 +21,23 @@ import com.example.flexie.utils.setSystemBarColor
 
 @Composable
 fun homeScreen(authViewmodel: AuthViewmodel, navController: NavController) {
+
+    val nv = rememberNavController()
+    val navBackStackEntry by nv.currentBackStackEntryAsState()
+    // Extract the route from the current back stack entry
+    var bottomBarState = rememberSaveable {
+        (mutableStateOf(true))
+    }
+    // Determine if the bottom bar should be visible based on the current route
+    when (navBackStackEntry?.destination?.route) {
+        "movieDetail" -> {
+            bottomBarState.value = false
+        }
+        else -> {
+            bottomBarState.value = true
+        }
+    }
+
     val context = LocalContext.current
     setSystemBarColor(statusBarColor = darkBlue, navigationBarColor = bottomNavColor)
 
@@ -27,8 +48,8 @@ fun homeScreen(authViewmodel: AuthViewmodel, navController: NavController) {
         screen.Friends,
         screen.Profile
     )
-    val nv = rememberNavController()
-    Scaffold(bottomBar = { BottomNavItems(navController = nv, items =list) }) {
+
+    Scaffold(bottomBar = { if(bottomBarState.value) {BottomNavItems(navController = nv, items =list)} }) {
         BottomNav_navgraph(navController = nv, modifier = Modifier.padding(it))
     }
 

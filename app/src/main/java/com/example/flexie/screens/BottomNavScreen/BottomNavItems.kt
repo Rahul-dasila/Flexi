@@ -26,7 +26,6 @@ fun BottomNavItems(navController: NavHostController, items: List<screen>) {
             BottomNavigationItem(
                 selected = select,
                 onClick = {
-
                     if (currentRoute != screen.route) {
                         if(screen.route == "home"){
                             navController.navigate(screen.route){
