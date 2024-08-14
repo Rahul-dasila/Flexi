@@ -1,9 +1,11 @@
 package com.example.flexie.screens.BottomNavScreen
 
 import android.app.Activity
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -55,6 +59,7 @@ import com.example.flexie.models.movie_home_row
 import com.example.flexie.models.movie_view_pager
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.utils.Dimen
+import com.example.flexie.utils.IdObject
 import com.example.flexie.utils.px
 import com.example.flexie.utils.setOrientation
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -205,15 +210,34 @@ fun MovieRowItem(list : List<movie_home_row>, height : Dp = Dimen.dimen.height1,
         .wrapContentWidth()
         .wrapContentWidth()){
      items(list){
+         val scale = remember {
+             Animatable(1f)
+         }
+         val myId = it.id
          val painter = rememberImagePainter(request = ImageRequest.Builder(LocalContext.current).data(it.imageUrI).crossfade(true).build())
          Image(painter = painter, contentDescription =" ", modifier = Modifier
              .width(width)
              .height(height)
              .padding(start = 10.dp)
-             .clip(RoundedCornerShape(4.dp))
-             .clickable {
-             navHostController.navigate("movieDetail")
+             .graphicsLayer {
+                 scaleX = scale.value
+                 scaleY = scale.value
              }
+             .pointerInput(Unit){
+                 detectTapGestures(
+                     onPress = {
+                         scale.animateTo(0.95f)
+                         tryAwaitRelease()
+                         scale.animateTo(1f)
+                     },
+                     onTap = {
+                         IdObject.id = myId
+                         navHostController.navigate("movieDetail")
+                     }
+                 )
+             }
+             .clip(RoundedCornerShape(4.dp))
+
              ,contentScale = ContentScale.Crop)
      }
     }

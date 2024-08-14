@@ -229,6 +229,6 @@ val ExpandedDimens = Dimens(
     button2 = 50.dp,
     height4 = 375.dp,
     boxHeight = 1250.dp,
-    padding4 = 12.dp
+    padding4 = 10.dp
 
 )

@@ -1,9 +1,11 @@
 package com.example.flexie.screens.movieScreens
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,12 +29,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,113 +51,130 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.example.flexie.R
+import com.example.flexie.ViewModels.Movie_detail_viewmodel
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.utils.Dimen
+import com.example.flexie.utils.IdObject
 import com.example.flexie.utils.setOrientation
 import com.example.flexie.utils.setSystemBarColor
 
 
 @Composable
-fun movieDetailScreen(navHostController: NavHostController) {
+fun movieDetailScreen(navHostController: NavHostController, ViewModel: Movie_detail_viewmodel) {
     setSystemBarColor(statusBarColor = darkBlue)
     val activity = LocalContext.current as Activity
+    val _pageData = ViewModel._pageData.collectAsState().value
+    val _moreLikeThis = ViewModel._moreLikeThis.collectAsState().value
+    ViewModel.loadMovieData()
     activity.setOrientation()
-    val painter =
-        rememberImagePainter(data = "https://drive.google.com/uc?export=download&id=1sti8SKISpOM4guPq3zENw_zKCmr0gRRg")
+    var painter =
+        rememberImagePainter(data = ViewModel.posterurl)
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(darkBlue)
         ) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    Box(modifier = Modifier.wrapContentSize()) {
-                        Image(
-                            painter = painter,
-                            contentDescription = "",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(Dimen.dimen.moviePostor),
-                            contentScale = ContentScale.Crop
-                        )
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .background(
-                                    brush = Brush.verticalGradient(
-                                        colors = listOf(
-                                            Color.Transparent, darkBlue
+
+            if (_pageData != null) {
+                ViewModel.posterurl = _pageData.realPosterUrl
+                item {
+                    Column(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Box(modifier = Modifier.wrapContentSize()) {
+                            Image(
+                                painter = painter,
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(Dimen.dimen.moviePostor),
+                                contentScale = ContentScale.Crop
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .background(
+                                        brush = Brush.verticalGradient(
+                                            colors = listOf(
+                                                Color.Transparent, darkBlue
+                                            )
                                         )
                                     )
-                                )
-                        )
-                        Box(
-                            modifier = Modifier
-                                .matchParentSize()
-                                .background(
-                                    brush = Brush.verticalGradient(
-                                        colors = listOf(
-                                            Color.Transparent, darkBlue
-                                        ), startY = 150f, endY = 0f
-                                    )
-                                )
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.Bottom,
-                            horizontalAlignment = Alignment.Start,
-                            modifier = Modifier.padding(start = Dimen.dimen.paddingMedium)
-                        ) {
-                            Text(
-                                text = "Sita Ramam",
-                                fontSize = Dimen.dimen.fontSizeHeadLine.sp,
-                                fontFamily = FontFamily(
-                                    Font(R.font.helvetica_neue)
-                                ),
-                                color = Color.LightGray
                             )
-                            Spacer(modifier = Modifier.height(Dimen.dimen.padding2))
-                            Row {
-                                val list = listOf(1, 2, 3, 4)
-                                list.forEach {
-                                    Text(
-                                        text = "Mystery",
-                                        fontSize = Dimen.dimen.fontSizeSmall.sp,
-                                        fontFamily = FontFamily(
-                                            Font(R.font.helvetica_neue)
-                                        ),
-                                        color = Color.LightGray
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .background(
+                                        brush = Brush.verticalGradient(
+                                            colors = listOf(
+                                                Color.Transparent, darkBlue
+                                            ), startY = 150f, endY = 0f
+                                        )
                                     )
-                                    Spacer(modifier = Modifier.width(Dimen.dimen.padding2))
+                            )
+                        }
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                verticalArrangement = Arrangement.Bottom,
+                                horizontalAlignment = Alignment.Start,
+                                modifier = Modifier.padding(start = Dimen.dimen.paddingMedium)
+                            ) {
+                                Text(
+                                    text = _pageData.name.trim(),
+                                    fontSize = Dimen.dimen.fontSizeHeadLine.sp,
+                                    fontFamily = FontFamily(
+                                        Font(R.font.helvetica_neue)
+                                    ),
+                                    color = Color.LightGray
+                                )
+                                Spacer(modifier = Modifier.height(Dimen.dimen.padding2))
+                                Row {
+                                    val category = _pageData.category[0].toString()
+                                    val list = listOf(
+                                        category,
+                                        _pageData.year,
+                                        _pageData.rating,
+                                        _pageData.uA
+                                    )
+                                    list.forEach {
+                                        Text(
+                                            text = it.toString(),
+                                            fontSize = Dimen.dimen.fontSizeSmall.sp,
+                                            fontFamily = FontFamily(
+                                                Font(R.font.helvetica_neue)
+                                            ),
+                                            color = Color.LightGray
+                                        )
+                                        Spacer(modifier = Modifier.width(Dimen.dimen.padding2))
+                                    }
                                 }
+                                Spacer(modifier = Modifier.height(Dimen.dimen.paddingSmall))
+                                playButton()
+                                Spacer(modifier = Modifier.height(Dimen.dimen.paddingMedium))
                             }
-                            Spacer(modifier = Modifier.height(Dimen.dimen.paddingSmall))
-                            playButton()
-                            Spacer(modifier = Modifier.height(Dimen.dimen.paddingMedium))
                         }
                     }
-                }
-                Text(
-                    text = "Set in 1964, it tells the story of " + "Lieutenant Ram, an orphaned army officer " + "serving at the Kashmir border, gets anonymous " + "love letters from Sita Mahalakshmi, after which Ram" + " is on a mission to find Sita and propose his love.",
-                    fontSize = Dimen.dimen.fontSizeSmall4.sp,
-                    color = Color.LightGray,
-                    fontFamily = FontFamily(
-                        Font(R.font.helvetica_neue)
-                    ),
-                    textAlign = TextAlign.Unspecified,
-                    modifier = Modifier.padding(
-                        start = Dimen.dimen.paddingMedium, end = Dimen.dimen.paddingSmall
+                    Text(
+                        text = _pageData.description,
+                        fontSize = Dimen.dimen.fontSizeSmall4.sp,
+                        color = Color.LightGray,
+                        fontFamily = FontFamily(
+                            Font(R.font.helvetica_neue)
+                        ),
+                        textAlign = TextAlign.Unspecified,
+                        modifier = Modifier.padding(
+                            start = Dimen.dimen.paddingMedium, end = Dimen.dimen.paddingSmall
+                        )
                     )
-                )
+                }
+            } else {
+                Log.d("rahul", "null")
             }
 
             item {
@@ -239,38 +262,46 @@ fun movieDetailScreen(navHostController: NavHostController) {
 
                 }
             }
-            item{
+            item {
                 Spacer(modifier = Modifier.height(Dimen.dimen.paddingMedium))
             }
-            item {
-                val gridItems = List(20) { it.toString() }
-                Text(
-                    text = "More like this", color = Color.LightGray,
-                    fontSize = (Dimen.dimen.fontSizeHeadLine - 4).sp,
-                    letterSpacing = 0.7.sp,
-                    fontFamily = FontFamily(Font(R.font.helvetica_neue)),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = Dimen.dimen.paddingMedium, top = Dimen.dimen.paddingMedium)
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(Dimen.dimen.boxHeight)
-                        .padding(
-                            top = Dimen.dimen.paddingSmall - 2.5.dp,
-                            start = Dimen.dimen.padding4,
-                            end = Dimen.dimen.padding4
+            if (_pageData != null) {
+                ViewModel.loadMoreMovies(_pageData.category[0])
+                if (_moreLikeThis.isNotEmpty()) {
+                    item {
+                        val gridItems = _moreLikeThis
+                        Text(
+                            text = "More like this", color = Color.LightGray,
+                            fontSize = (Dimen.dimen.fontSizeHeadLine - 4).sp,
+                            letterSpacing = 0.7.sp,
+                            fontFamily = FontFamily(Font(R.font.helvetica_neue)),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(
+                                start = Dimen.dimen.paddingMedium,
+                                top = Dimen.dimen.paddingMedium
+                            )
                         )
-                ) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(3),
-                        contentPadding = PaddingValues(1.dp),
-                        modifier = Modifier
-                            .fillMaxWidth() // Use width constraint instead of size constraint
-                            .wrapContentHeight() // Use wrapContentHeight to avoid infinite constraints
-                    ) {
-                        items(gridItems) { item ->
-                            moreLikeThisItem()
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(Dimen.dimen.boxHeight)
+                                .padding(
+                                    top = Dimen.dimen.paddingSmall - 2.5.dp,
+                                    start = Dimen.dimen.padding4,
+                                    end = Dimen.dimen.padding4
+                                )
+                        ) {
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(3),
+                                contentPadding = PaddingValues(1.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth() // Use width constraint instead of size constraint
+                                    .wrapContentHeight() // Use wrapContentHeight to avoid infinite constraints
+                            ) {
+                                items(gridItems) { item ->
+                                    moreLikeThisItem(item.imageUrI ,item.id, ViewModel )
+                                }
+                            }
                         }
                     }
                 }
@@ -283,21 +314,43 @@ fun movieDetailScreen(navHostController: NavHostController) {
                 .padding(start = Dimen.dimen.paddingMedium, top = Dimen.dimen.paddingMedium)
                 .clickable {
                     navHostController.popBackStack()
-                }.size(Dimen.dimen.medium1)
+                }
+                .size(Dimen.dimen.medium1)
         )
     }
 }
 
 @Composable
-fun moreLikeThisItem() {
+fun moreLikeThisItem(uri: String ,id : String , ViewModel : Movie_detail_viewmodel ) {
+    val painter = rememberImagePainter(data = uri)
+    val scale = remember { androidx.compose.animation.core.Animatable(1f) }
+
     Image(
-        painter = painterResource(id = R.drawable.sitaramam),
+        painter = painter,
         contentDescription = "",
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .height(Dimen.dimen.height4)
             .padding(Dimen.dimen.small1 - 1.5.dp)
+            .graphicsLayer { scaleX = scale.value
+                scaleY = scale.value
+            }
+            .pointerInput(Unit){
+                detectTapGestures (
+                    onPress = {
+                        scale.animateTo(0.95f)
+                        tryAwaitRelease()
+                        scale.animateTo(1f)
+                    },
+                    onTap = {
+                        IdObject.id = id
+                        ViewModel.loadMovieData()
+                    }
+
+                )
+            }
             .clip(RoundedCornerShape(8.dp))
+
     )
 }
 

@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.flexie.ViewModels.Movie_detail_viewmodel
 import com.example.flexie.ViewModels.d_homeScreen_ViewModel
 import com.example.flexie.screens.BottomNavScreen.Search_screen
 import com.example.flexie.screens.BottomNavScreen.chat_screen
@@ -24,6 +25,7 @@ import com.example.flexie.screens.movieScreens.movieDetailScreen
 @Composable
 fun BottomNav_navgraph(navController :NavHostController , modifier: Modifier ) {
     val d_homeViewModel : d_homeScreen_ViewModel = hiltViewModel()
+    val Movie_detail_viewmodel : Movie_detail_viewmodel = hiltViewModel()
    NavHost(navController = navController, startDestination = screen.Home.route ){
        composable(screen.Home.route){
          d_home_Screen(d_homeViewModel , navController)
@@ -41,7 +43,7 @@ fun BottomNav_navgraph(navController :NavHostController , modifier: Modifier ) {
            profile_screen()
        }
        composable("movieDetail"){
-           movieDetailScreen(navController)
+           movieDetailScreen(navController , Movie_detail_viewmodel)
        }
    }
 
