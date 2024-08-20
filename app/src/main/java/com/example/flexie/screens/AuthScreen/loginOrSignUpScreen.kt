@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +44,11 @@ import com.example.flexie.utils.setSystemBarColor
 @Composable
 fun signUpOrLoginScreen(authViewmodel: AuthViewmodel, navController: NavController) {
     setSystemBarColor(statusBarColor = darkBlue, navigationBarColor = Color.Black)
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+    ) {
         Image(
             painter = painterResource(id = R.drawable.initial_image),
             contentDescription = "initial",
@@ -77,8 +84,7 @@ fun signUpOrLoginScreen(authViewmodel: AuthViewmodel, navController: NavControll
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth()
-            , verticalArrangement = Arrangement.Bottom,
+                .fillMaxWidth(), verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -126,7 +132,11 @@ fun signUpOrLoginScreen(authViewmodel: AuthViewmodel, navController: NavControll
             }
             Spacer(modifier = Modifier.size(7.dp))
             Row(modifier = Modifier.padding(top = 10.dp)) {
-                Text(text = "Create a new account?  ", color = Color.Gray, fontSize = Dimen.dimen.fontSizeSmall.sp)
+                Text(
+                    text = "Create a new account?  ",
+                    color = Color.Gray,
+                    fontSize = Dimen.dimen.fontSizeSmall.sp
+                )
                 Text(
                     text = "Sign Up",
                     color = Color.Red,

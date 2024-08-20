@@ -14,5 +14,6 @@ val darkBlue = Color(0xFF00080F)
 val lightGray = Color(0xFF4A4A4A)
 val lightGray2 = Color(0xFF5E6470)
 val bottomNavColor = Color(0xFF0e1114)
+val shimmerColor = Color(0xFF17181a)
 
 val lightRed = Color(0xFFF45156)

@@ -11,14 +11,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -44,13 +46,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.ehsanmsz.mszprogressindicator.progressindicator.LineSpinFadeLoaderProgressIndicator
 import com.example.flexie.R
 import com.example.flexie.ViewModels.AuthViewmodel
 import com.example.flexie.ui.theme.darkBlue
 import com.example.flexie.ui.theme.lightGray
 import com.example.flexie.ui.theme.lightGray2
 import com.example.flexie.utils.Dimen
+import com.example.flexie.utils.Progressbar
 import com.example.flexie.utils.px
 import com.example.flexie.utils.setSystemBarColor
 
@@ -64,6 +66,7 @@ fun sign_in_screen(navController: NavController,authViewmodel: AuthViewmodel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(darkBlue, lightGray),
@@ -208,9 +211,4 @@ fun nextBtn(navController: NavController,route :String,authViewmodel: AuthViewmo
     }
 }
 
-@Composable
-fun Progressbar(){
-    LineSpinFadeLoaderProgressIndicator(
-        modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center), color = Color.Red,animationDuration = 800, isClockwise = true
-    )
-}
+

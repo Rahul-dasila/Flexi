@@ -30,7 +30,13 @@ fun homeScreen(authViewmodel: AuthViewmodel, navController: NavController) {
     }
     // Determine if the bottom bar should be visible based on the current route
     when (navBackStackEntry?.destination?.route) {
-        "movieDetail" -> {
+        "movieDetail/{movieId}" -> {
+            bottomBarState.value = false
+        }
+        "PlayerScreenSolo/{movieId}" -> {
+            bottomBarState.value = false
+        }
+        "full" ->{
             bottomBarState.value = false
         }
         else -> {

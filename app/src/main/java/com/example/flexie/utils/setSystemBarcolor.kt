@@ -6,6 +6,7 @@ import android.content.res.Resources
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
@@ -30,4 +31,12 @@ val Int.px: Int get() = (this * Resources.getSystem().displayMetrics.density).to
 
 fun Activity.setOrientation(){
     requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+}
+
+fun Activity.setOrientation2(){
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+}
+
+fun Dp.toPx(context: android.content.Context): Int {
+    return (this.value * context.resources.displayMetrics.density).toInt()
 }

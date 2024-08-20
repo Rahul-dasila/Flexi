@@ -1,6 +1,5 @@
 package com.example.flexie.ViewModels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flexie.models.movie_detail_item
 import com.example.flexie.models.movie_home_row
-import com.example.flexie.repository.Movie_detail_repository
 import com.example.flexie.repository.home_movie_category_repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,43 +15,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class Movie_detail_viewmodel @Inject constructor(private val movieDetailRepository: Movie_detail_repository , private val homeMovieCategoryRepository: home_movie_category_repository ) : ViewModel() {
-
-    private var pageData : MutableStateFlow<movie_detail_item?> = MutableStateFlow<movie_detail_item?>(null)
-    val _pageData : StateFlow<movie_detail_item?> = pageData
-
-
-    var movieId by mutableStateOf("")
-    var loading1 by mutableStateOf(true)
-    var loading2 by mutableStateOf(true)
-
-
-
-    var _category : MutableStateFlow<String> = MutableStateFlow<String>("")
-
-
-
+class SharedViewModelMovie @Inject constructor (private val homeMovieCategoryRepository: home_movie_category_repository) : ViewModel() {
+    var movieData : movie_detail_item? = null
 
     private val moreLikeThis : MutableStateFlow<List<movie_home_row>> = MutableStateFlow<List<movie_home_row>>(
         emptyList()
     )
-    var _moreLikeThis : StateFlow<List<movie_home_row>> = moreLikeThis
-
-    fun loadMovieData(id : String){
-        viewModelScope.launch {
-            pageData.value = movieDetailRepository.getMovieDetail(id)
-            loading1 = false
-        }
+    var loading1 by mutableStateOf(true)
+    init {
+        loading1 = true
     }
+    var _moreLikeThis : StateFlow<List<movie_home_row>> = moreLikeThis
+    var _category : MutableStateFlow<String> = MutableStateFlow<String>("")
+    var movieId by mutableStateOf("")
+
 
 
     fun loadMoreMovies(){
         viewModelScope.launch {
             val list: List<movie_home_row> = homeMovieCategoryRepository.getMovies(_category.value)
             val filteredList = list.filter { it.id != movieId }
-            Log.d("rahul" , "${_category.value} $filteredList")
-            loading2 = false
             moreLikeThis.value = filteredList
+            loading1 = false
         }
     }
+
 }

@@ -1,11 +1,15 @@
 package com.example.flexie.screens.BottomNavScreen
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -20,7 +24,7 @@ import com.example.flexie.ui.theme.bottomNavColor
 fun BottomNavItems(navController: NavHostController, items: List<screen>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    BottomNavigation(backgroundColor = bottomNavColor) {
+    BottomNavigation(backgroundColor = bottomNavColor , modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)) {
         items.forEach { screen ->
             val select = currentRoute == screen.route
             BottomNavigationItem(

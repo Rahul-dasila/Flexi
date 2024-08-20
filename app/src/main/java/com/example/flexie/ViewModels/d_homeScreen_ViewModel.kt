@@ -26,6 +26,7 @@ class d_homeScreen_ViewModel @Inject constructor(
     private var _moviesViewPager = MutableStateFlow<List<movie_view_pager>>(emptyList())
     val movieViewPager: StateFlow<List<movie_view_pager>> = _moviesViewPager
     var isLoading by mutableStateOf(true)
+    var isCategoryLoading by mutableStateOf(true)
 
     private var _movieCategories = MutableStateFlow<List<movie_categories>>(emptyList())
     val movieCategories : StateFlow<List<movie_categories>> = _movieCategories
@@ -47,6 +48,7 @@ class d_homeScreen_ViewModel @Inject constructor(
     fun loadMovieCategories(){
         viewModelScope.launch {
             _movieCategories.value = homeMovieCategoryRepository.getMovieCategory()
+            isCategoryLoading = false
         }
     }
 

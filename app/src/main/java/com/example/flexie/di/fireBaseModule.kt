@@ -1,5 +1,6 @@
 package com.example.flexie.di
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -29,4 +30,8 @@ class fireBaseModule {
    fun provideFirebaseStorage():FirebaseStorage{
      return FirebaseStorage.getInstance()
    }
+
+    @Provides
+    @Singleton
+    fun provideContext(application: android.app.Application): Context = application.applicationContext
 }

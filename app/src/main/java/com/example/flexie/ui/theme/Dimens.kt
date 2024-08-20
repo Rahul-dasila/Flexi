@@ -51,7 +51,7 @@ data class Dimens(
 val compactSmall = Dimens(
     3.dp,
     small1 = 5.dp,
-    6.dp,
+    7.dp,
     8.dp,
     medium1 = 15.dp,
     22.dp,
@@ -127,7 +127,7 @@ val Compact = Dimens(
     7.dp,
     small1 = 10.dp,
     15.dp,
-    20.dp,
+    22.dp,
     medium1 = 22.dp,
     30.dp,
     40.dp,
