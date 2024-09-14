@@ -45,7 +45,9 @@ data class Dimens(
     val button2 : Dp = 0.dp,
     val height4 : Dp = 0.dp,
     val boxHeight : Dp = 0.dp,
-    val padding4 : Dp = padding3
+    val padding4 : Dp = padding3,
+    val searchBarSize : Dp = 0.dp,
+    val extraSmall2 : Dp = extraSmall
 )
 
 val compactSmall = Dimens(
@@ -81,7 +83,8 @@ val compactSmall = Dimens(
     button2 = 24.dp ,
     height4 = 150.dp,
     boxHeight = 480.dp,
-    padding4 = 4.5.dp
+    padding4 = 4.5.dp,
+    searchBarSize = 37.dp
 
 )
 
@@ -119,7 +122,8 @@ val compactMedium = Dimens(
     button2 = 30.dp,
     height4 = 200.dp,
     boxHeight = 650.dp,
-    padding4 = 7.dp
+    padding4 = 7.dp,
+    searchBarSize = 43.dp
 )
 
 
@@ -156,7 +160,8 @@ val Compact = Dimens(
     button2 = 34.dp ,
     height4 = 250.dp ,
     boxHeight = 800.dp,
-    padding4 = 8.dp
+    padding4 = 8.dp,
+    searchBarSize = 50.dp
 )
 
 val Medium = Dimens(
@@ -192,7 +197,9 @@ val Medium = Dimens(
     button2 = 43.dp ,
     height4 = 300.dp ,
     boxHeight = 900.dp,
-    padding4 = 12.dp
+    padding4 = 12.dp,
+    searchBarSize = 56.dp,
+    extraSmall2 = 10.dp
 )
 
 val ExpandedDimens = Dimens(
@@ -218,7 +225,7 @@ val ExpandedDimens = Dimens(
     endY = 0f,
     fontSizeSmall2 = 28,
     padding1 = 45.dp,
-    button = 45.dp,
+    button = 44.dp,
     padding2 = 13.dp,
     padding3 = 25.dp,
     width1 = 245.dp,
@@ -229,6 +236,8 @@ val ExpandedDimens = Dimens(
     button2 = 50.dp,
     height4 = 375.dp,
     boxHeight = 1250.dp,
-    padding4 = 10.dp
+    padding4 = 10.dp,
+    searchBarSize = 65.dp,
+    extraSmall2 = 13.dp
 
 )

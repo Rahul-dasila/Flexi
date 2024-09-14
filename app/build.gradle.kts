@@ -122,4 +122,15 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.4.0")
     implementation("androidx.media3:media3-exoplayer-dash:1.4.0")
     implementation("androidx.media3:media3-ui:1.4.0")
+
+    //One signal
+    implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
+
+    //Room Database library
+    val room_version = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 }

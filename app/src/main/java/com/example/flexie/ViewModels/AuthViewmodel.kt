@@ -6,20 +6,16 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flexie.repository.AuthRepository
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import com.onesignal.OneSignal
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.logging.Handler
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,6 +88,7 @@ class AuthViewmodel @Inject constructor(
                         message = "Sign In Successful"
                         val user = firebaseAuth.currentUser
                         user?.let {
+                            saveOneSignalId(user.uid)
                             checkIfUserRegisteredOrNot(user.uid)
                         }
                     } else {
@@ -156,6 +153,14 @@ class AuthViewmodel @Inject constructor(
             }, 60000
         )
     }
+
+    fun saveOneSignalId(id: String) {
+        viewModelScope.launch {
+            OneSignal.login(id)
+            AuthRepository.saveOneSignalPlayerId(id)
+        }
+    }
+
 
 
 

@@ -1,7 +1,7 @@
 package com.example.flexie.models
 
 data class movie_view_pager(
-    val id : Int = 0,
+    val id : String ="",
     val name : String = "",
     val language : String = "",
     val rating : Float = 0.0f,

@@ -135,7 +135,11 @@ fun MoviePlayer(
                 painter = painterResource(id = R.drawable.baseline_fullscreen_24),
                 contentDescription = "backBtn",
                 modifier = Modifier
-                    .padding(start = Dimen.dimen.small3 , bottom = Dimen.dimen.small3 , end = Dimen.dimen.small3)
+                    .padding(
+                        start = Dimen.dimen.small3,
+                        bottom = Dimen.dimen.small3,
+                        end = Dimen.dimen.small3
+                    )
                     .size(Dimen.dimen.medium2)
             )
         }

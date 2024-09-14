@@ -94,7 +94,7 @@ fun movieDetailScreen(
     val activity = LocalContext.current as Activity
     activity.setOrientation()
 
-    LaunchedEffect(key1 = id) {
+    LaunchedEffect(Unit) {
         if (id.isNotEmpty()) {
             ViewModel.movieId = id
             sharedViewModelMovie.movieId = id
@@ -353,7 +353,7 @@ fun movieDetailScreen(
                                 }
                                 sharedViewModelMovie.movieData = pageData
                                 Spacer(modifier = Modifier.height(Dimen.dimen.paddingSmall))
-                                playButton(ViewModel, navHostController)
+                                playButton(ViewModel, navHostController,sharedViewModelMovie,playerViewModel)
                                 Spacer(modifier = Modifier.height(Dimen.dimen.paddingMedium))
                             }
                         }
@@ -594,7 +594,7 @@ fun movieDetailScreen(
                         navHostController.popBackStack()
                         // Using coroutine to handle the delay directly in the onClick
                         CoroutineScope(Dispatchers.Main).launch {
-                            delay(10000)
+                            delay(2000)
                             isClickable = true
                         }
                     }
@@ -616,19 +616,9 @@ fun movieDetailScreen(
 @Composable
 fun moreLikeThisItem(url: String, id: String, navHostController: NavHostController, oldId: String) {
     val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current).data(url).crossfade(200).build()
+        model = ImageRequest.Builder(LocalContext.current).data(url).placeholder(R.drawable.shimmer).crossfade(200).build()
     )
     val scale = remember { androidx.compose.animation.core.Animatable(1f) }
-
-    if (painter.state is AsyncImagePainter.State.Loading) {
-        Box(
-            modifier = Modifier
-                .height(Dimen.dimen.height4)
-                .padding(Dimen.dimen.small1 - 1.5.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(color = shimmerColor)
-        )
-    }
 
     Image(
         painter = painter,
@@ -662,13 +652,19 @@ fun moreLikeThisItem(url: String, id: String, navHostController: NavHostControll
 }
 
 @Composable
-fun playButton(viewModel: Movie_detail_viewmodel, navHostController: NavHostController) {
+fun playButton(viewModel: Movie_detail_viewmodel, navHostController: NavHostController,sharedViewModelMovie: SharedViewModelMovie,playerViewModel: PlayerViewModel) {
     Box(
         modifier = Modifier
             .wrapContentHeight()
             .clip(RoundedCornerShape(8.dp))
             .background(Color.White)
             .clickable {
+                playerViewModel.uri = ""
+                playerViewModel.playbackPosition = 0L
+                playerViewModel.playWhenReady = true
+                playerViewModel.isFullScreen = false
+                playerViewModel.videoLoading = true
+                sharedViewModelMovie.moreLikeThis.value = emptyList()
                 navHostController.navigate("PlayerScreenSolo/${viewModel.movieId}")
             },
         contentAlignment = Alignment.Center
@@ -703,5 +699,6 @@ fun playButton(viewModel: Movie_detail_viewmodel, navHostController: NavHostCont
             )
             Spacer(modifier = Modifier.width(11.5.dp))
         }
+
     }
 }

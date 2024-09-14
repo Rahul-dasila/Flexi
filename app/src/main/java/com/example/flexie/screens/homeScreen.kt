@@ -39,6 +39,9 @@ fun homeScreen(authViewmodel: AuthViewmodel, navController: NavController) {
         "full" ->{
             bottomBarState.value = false
         }
+        "actualChat/{id}/{name}" ->{
+            bottomBarState.value = false
+        }
         else -> {
             bottomBarState.value = true
         }

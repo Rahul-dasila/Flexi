@@ -32,7 +32,14 @@ class PlayerViewModel @Inject constructor(
     init {
         player.addListener(object : Player.Listener {
             override fun onIsLoadingChanged(isLoading: Boolean) {
-                videoLoading = isLoading
+                val playerState = player.playbackState
+                videoLoading = isLoading && (playerState == Player.STATE_BUFFERING || playerState == Player.STATE_IDLE)
+            }
+
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                if(playbackState == Player.STATE_READY){
+                    videoLoading = false
+                }
             }
         })
     }

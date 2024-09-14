@@ -1,6 +1,7 @@
 package com.example.flexie.screens.movieScreens
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -82,10 +83,13 @@ fun movieScreenSolo(
     setSystemBarColor(statusBarColor = darkBlue)
 
     LaunchedEffect(key1 = sharedViewModelMovie._category) {
+        Log.d("rahul","cheeck2")
         if (sharedViewModelMovie._category.value.isNotEmpty()) {
+            Log.d("rahul","cheeck")
             sharedViewModelMovie.loadMoreMovies()
         }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -94,6 +98,7 @@ fun movieScreenSolo(
 
     ) {
         if (sharedViewModelMovie.movieData != null) {
+            sharedViewModelMovie.addWatching(id)
             Column(modifier = Modifier.fillMaxSize()) {
                 Box {
                     MoviePlayer(
@@ -163,6 +168,7 @@ fun movieScreenSolo(
                                     end = Dimen.dimen.padding4
                                 )
                         ) {
+                            Log.d("moreLikeThis" , "$moreLikeThis")
                             LazyVerticalGrid(
                                 columns = GridCells.Fixed(3),
                                 contentPadding = PaddingValues(1.dp),
@@ -174,7 +180,8 @@ fun movieScreenSolo(
                                     moreLikeThisItem2(
                                         it,
                                         sharedViewModelMovie.movieId,
-                                        navHostController
+                                        navHostController,
+                                        sharedViewModelMovie
                                     )
                                 }
                             }
@@ -259,8 +266,10 @@ fun movieScreenSolo(
     }
 }
 
+
+
 @Composable
-fun moreLikeThisItem2(item: movie_home_row, OldId: String, navHostController: NavHostController) {
+fun moreLikeThisItem2(item: movie_home_row, OldId: String, navHostController: NavHostController , sharedViewModelMovie: SharedViewModelMovie) {
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current).data(item.imageUrI).crossfade(200)
             .build()

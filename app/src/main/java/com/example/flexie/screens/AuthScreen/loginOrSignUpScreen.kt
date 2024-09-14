@@ -27,13 +27,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.flexie.R
 import com.example.flexie.ViewModels.AuthViewmodel
 import com.example.flexie.ui.theme.darkBlue
@@ -50,7 +50,13 @@ fun signUpOrLoginScreen(authViewmodel: AuthViewmodel, navController: NavControll
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.initial_image),
+            painter = rememberImagePainter(
+                data = R.drawable.initial_image,
+                builder = {
+                    // Resize to fit the screen
+                    size(2000) // or any size that suits your screen
+                }
+            ),
             contentDescription = "initial",
             contentScale = ContentScale.Crop,
             modifier = Modifier

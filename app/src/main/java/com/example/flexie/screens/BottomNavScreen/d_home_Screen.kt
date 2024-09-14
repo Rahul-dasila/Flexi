@@ -78,6 +78,7 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel, navHostController: Na
     val movieViewPager = d_homeViewModel.movieViewPager.collectAsState().value
     val movieCategories = d_homeViewModel.movieCategories.collectAsState().value
     val movieRowData = d_homeViewModel.movieRow.collectAsState().value
+    val continueWatching = d_homeViewModel._continueWatching.collectAsState().value
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     var _key = remember { mutableStateOf(false) }
@@ -85,6 +86,7 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel, navHostController: Na
     var _movieItem = remember { mutableStateOf(-1) }
     val movieItem = _movieItem.value
     val activity = LocalContext.current as Activity
+    val continueLoading = d_homeViewModel._loadingContinue.collectAsState().value
     activity.setOrientation()
 
     Box(
@@ -176,23 +178,31 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel, navHostController: Na
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            watchButton(movieItem)
+                            val currentItem = movieViewPager[pagerState.currentPage]
+                            watchButton(currentItem.id , navHostController)
                         }
                     }
                 }
             }
             item {
-                Column(modifier = Modifier.padding(top = 19.dp, bottom = 8.dp)) {
-                    Text(
-                        text = "Continue watching for you",
-                        color = Color.LightGray,
-                        letterSpacing = 0.7.sp,
-                        fontSize = (Dimen.dimen.fontSizeHeadLine - 4).sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily(Font(R.font.helvetica_neue)),
-                        modifier = Modifier.padding(start = 8.6.dp, bottom = 7.dp)
-                    )
-                    ContinueWatchingItem()
+                LaunchedEffect(key1 = Unit) {
+                    d_homeViewModel.loadContinueWatching()
+                }
+                if (continueWatching.isNotEmpty()) {
+                    Column(modifier = Modifier.padding(top = 19.dp, bottom = 8.dp)) {
+                        if (!continueLoading) {
+                            Text(
+                                text = "Continue watching for you",
+                                color = Color.LightGray,
+                                letterSpacing = 0.7.sp,
+                                fontSize = (Dimen.dimen.fontSizeHeadLine - 4).sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily(Font(R.font.helvetica_neue)),
+                                modifier = Modifier.padding(start = 8.6.dp, bottom = 7.dp)
+                            )
+                        }
+                        ContinueWatchingItem(continueWatching, d_homeViewModel, navHostController)
+                    }
                 }
             }
 
@@ -257,17 +267,6 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel, navHostController: Na
                                         modifier = Modifier.padding(start = 8.6.dp, bottom = 7.dp)
                                     )
                                     movieRowData[category.category]?.let { movies ->
-                                        // Use the index to determine when to change the size
-//                                        LazyRow(
-//                                            modifier = Modifier
-//                                                .fillMaxWidth(),
-//                                            horizontalArrangement = Arrangement.spacedBy(2.dp)
-//                                        ){
-//                                            items(10){
-//
-//                                            }
-//                                        }
-
                                         if ((index + 1) % 4 == 0) {
                                             MovieRowItem(
                                                 list = movies,
@@ -314,20 +313,31 @@ fun d_home_Screen(d_homeViewModel: d_homeScreen_ViewModel, navHostController: Na
 }
 
 @Composable
-fun ContinueWatchingItem() {
-    val list = listOf<Int>(1, 2, 3, 4, 5)
+fun ContinueWatchingItem(
+    continueWatching: List<String>,
+    d_homeViewModel: d_homeScreen_ViewModel,
+    navHostController: NavHostController
+) {
     val context = LocalContext.current
+    val item = d_homeViewModel._continueItemList.collectAsState().value
+    LaunchedEffect(key1 = Unit) {
+        d_homeViewModel.getContinueMovieItem(continueWatching)
+    }
     LazyRow(
         modifier = Modifier
             .wrapContentWidth()
             .wrapContentHeight()
     ) {
-        items(list) {
+        items(item.reversed()) {
+            val painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(context).data(it.url).placeholder(R.drawable.shimmer)
+                    .build()
+            )
             val scale = remember {
                 Animatable(1f)
             }
             Image(
-                painter = painterResource(id = R.drawable.inter),
+                painter = painter,
                 contentDescription = "",
                 modifier = Modifier
                     .width(Dimen.dimen.width2)
@@ -339,17 +349,17 @@ fun ContinueWatchingItem() {
                     }
                     .pointerInput(Unit) {
                         detectTapGestures(
-                            onPress = {
+                            onPress = { offset ->
                                 scale.animateTo(0.95f)
                                 val success = tryAwaitRelease()
                                 scale.animateTo(1f)
                                 if (success) {
-
+                                    navHostController.navigate("movieDetail/${it.id}")
                                 }
                             }
                         )
-                    }.clip(RoundedCornerShape(9.dp))
-                ,
+                    }
+                    .clip(RoundedCornerShape(9.dp)),
                 contentScale = ContentScale.Crop
             )
         }
@@ -413,7 +423,7 @@ fun MovieRowItem(
 @Composable
 fun movieViewPagerItem(movie: movie_view_pager) {
     val painter = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current).data(movie.imageUrl).crossfade(200)
+        model = ImageRequest.Builder(LocalContext.current).size(1500).data(movie.imageUrl).crossfade(200)
             .build()
     )
     val colors = listOf(
@@ -465,7 +475,6 @@ fun movieViewPagerItem(movie: movie_view_pager) {
                         Brush.verticalGradient(colors, startY = 250f, endY = 0f)
                     )
             )
-
         }
         Row(
             modifier = Modifier
@@ -509,7 +518,7 @@ fun movieViewPagerItem(movie: movie_view_pager) {
 }
 
 @Composable
-fun watchButton(movieItem: Int) {
+fun watchButton(movieItem: String , navHostController: NavHostController) {
     Box(
         modifier = Modifier
             .padding(bottom = 30.dp)
@@ -517,7 +526,7 @@ fun watchButton(movieItem: Int) {
             .clip(RoundedCornerShape(8.dp))
             .background(Color.DarkGray)
             .clickable {
-
+                navHostController.navigate("movieDetail/$movieItem")
             }, contentAlignment = Alignment.Center
     ) {
         Row(
